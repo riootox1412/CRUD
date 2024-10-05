@@ -1,0 +1,14 @@
+GET http://localhost:5000/api/v1/users
+
+###
+GET http://localhost:5000/api/v1/users/1
+
+###
+POST http://localhost:5000/api/v1/users
+Content-Type: application/json
+
+{
+    "name": "Zod EXarion",
+    "email": "Zod@gmail.com",
+    "gender": "Male"
+}
