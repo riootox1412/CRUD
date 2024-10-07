@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   const [users, setUser] = useState([]);
+  const [sortOrder, setSortOrder] = useState("A-Z");
 
   // render getUser untuk menampilkan semua data user
   useEffect(() => {
@@ -26,12 +27,37 @@ const Home = () => {
     }
   };
 
+  // method sort
+  const sortUsers = [...users].sort((a, b) => {
+    return sortOrder === "A-Z"
+      ? a.name.localeCompare(b.name)
+      : b.name.localeCompare(a.name);
+  });
+
   return (
     <div className="columns is-centered mt-5">
       <div className="column is-half">
-        <Link className="button is-success" to={"/add"}>
-          Create User
-        </Link>
+        <div className="container is-flex">
+          <Link className="button is-success mr-2" to={"/add"}>
+            Create User
+          </Link>
+
+          {/* sort name a-z */}
+          <div className="field">
+            <div className="control">
+              <div className="select">
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                >
+                  <option>A-Z</option>
+                  <option>Z-A</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <table className="table is-striped is-fullwidth">
           <thead>
             <tr>
@@ -43,7 +69,7 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => (
+            {sortUsers.map((user, index) => (
               <tr key={user.id}>
                 <td>{index + 1}</td>
                 <td>{user.name}</td>
