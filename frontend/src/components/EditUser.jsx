@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const EditUser = () => {
   const [name, setName] = useState("");
@@ -12,6 +13,15 @@ const EditUser = () => {
   useEffect(() => {
     getUserById();
   }, []);
+
+  const showSuccessAlert = () => {
+    Swal.fire({
+      title: "Berhasil!",
+      text: "Data berhasil disimpan.",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
+  };
 
   const updateUser = async (e) => {
     e.preventDefault();
@@ -88,7 +98,11 @@ const EditUser = () => {
 
           {/* submit */}
           <div className="field">
-            <button type="submit" className="button is-success">
+            <button
+              onClick={showSuccessAlert}
+              type="submit"
+              className="button is-success"
+            >
               Save
             </button>
           </div>

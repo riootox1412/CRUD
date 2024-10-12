@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Home = () => {
   const [users, setUser] = useState([]);
@@ -17,22 +18,38 @@ const Home = () => {
     setUser(response.data.data);
   };
 
-  //   method delete user
-  const deleteUser = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/v1/users/${id}`);
-      getUsers();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   // method sort
   const sortUsers = [...users].sort((a, b) => {
     return sortOrder === "A-Z"
       ? a.name.localeCompare(b.name)
       : b.name.localeCompare(a.name);
   });
+
+  //pop up alert delete
+  const alertDeleteUser = async (id) => {
+    try {
+      //tampilkan konfirmasi sebelum delete
+      const result = await Swal.fire({
+        title: "Apakah kamu yakin?",
+        text: "User ini akan dihapus secara permanen!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, hapus!",
+        cancelButtonText: "Batal",
+      });
+
+      if (result.isConfirmed) {
+        await axios.delete(`http://localhost:5000/api/v1/users/${id}`);
+
+        getUsers();
+
+        Swal.fire("Dihapus", "User telah berhasil dihapus", "success");
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire("Error", "Terjadi kesalahan saat menghapus user", "error");
+    }
+  };
 
   return (
     <div className="columns is-centered mt-5">
@@ -81,7 +98,7 @@ const Home = () => {
                   </Link>
                   <button
                     className="button is-danger"
-                    onClick={() => deleteUser(user.id)}
+                    onClick={() => alertDeleteUser(user.id)}
                   >
                     delete
                   </button>
